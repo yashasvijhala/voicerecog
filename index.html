@@ -42,11 +42,7 @@
             } else if (command.toLowerCase().includes('i am')) {
               const nameStart = command.indexOf('i am') + 7
               const name = command.substring(nameStart)
-              if (name == 'ekansh') {
-                speak(
-                  `Oh, the 10X developer is finally here! Welcome ${name}. By the way, ${name},Your life seems to be messed up just because of yashasvi`
-                )
-              } else {
+             {
                 speak(`Hello ${name}. Your life seems to be messed up.`)
               }
             }
