@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Voice Capture</title>
+  </head>
+  <body>
+    <h1>Voice</h1>
+    <button id="startButton">Start Voice Recognition</button>
+    <button id="speakButton" style="display: none">Speak Detected Text</button>
+    <div id="output"></div>
+
+    <script>
+      const startButton = document.getElementById('startButton')
+      const speakButton = document.getElementById('speakButton')
+      const output = document.getElementById('output')
+      let recog = null
+
+      startButton.addEventListener('click', () => {
+        if (!('webkitSpeechRecognition' in window)) {
+          output.innerHTML = 'Speech recog is not supported by this browser.'
+          return
+        }
+
+        if (recog === null) {
+          recog = new webkitSpeechRecognition()
+          recog.continuous = true
+          recog.lang = 'en-IN'
+
+          recog.onstart = () => {
+            output.innerHTML = 'listening...'
+          }
+
+          recog.onresult = event => {
+            const last = event.results.length - 1
+            const command = event.results[last][0].transcript
+            output.innerHTML = `You said: ${command}`
+
+            if (command.toLowerCase().includes('how are you')) {
+              speak('mind your own business, you little piece of love.')
+            } else if (command.toLowerCase().includes('so bored')) {
+              speak('Do something useful, you brainless creature.')
+            } else if (command.toLowerCase().includes('i am')) {
+              const nameStart = command.indexOf('i am') + 7
+              const name = command.substring(nameStart)
+              if (name == 'ekansh') {
+                speak(
+                  `Oh, the 10X developer is finally here! Welcome ${name}. By the way, ${name},Your life seems to be messed up just because of yashasvi`
+                )
+              } else {
+                speak(`Hello ${name}. Your life seems to be messed up.`)
+              }
+            }
+          }
+
+          recog.onend = () => {
+            output.innerHTML = 'stopped.'
+          }
+        }
+
+        recog.start()
+      })
+
+      speakButton.addEventListener('click', () => {
+        const command = output.innerText.replace('You said: ', '')
+        speak(command)
+      })
+
+      function speak(text) {
+        const speechSynthesis = window.speechSynthesis
+        const utterance = new SpeechSynthesisUtterance(text)
+        speechSynthesis.speak(utterance)
+      }
+    </script>
+  </body>
+</html>
